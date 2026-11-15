@@ -20,7 +20,7 @@ pipeline {
                 }
             }
             environment {
-            npm_config_cache = "${WORKSPACE}/.npm"
+                npm_config_cache = "${WORKSPACE}/.npm"
             steps {
                 sh '''
                     ls -la
