@@ -21,9 +21,12 @@ pipeline {
             }
             steps {
                 sh '''
-                    echo "With docker"
                     ls -la
-                    touch container-yes.txt
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la                    
                 '''
             }
         }
