@@ -80,6 +80,8 @@ pipeline {
                 node_modules/.bin/serve --version
                 echo "Deploying to production. Project ID: ${NETLIFY_PROJECT_ID}"
                 node_modules/.bin/serve status 
+                node_modules/.bin/netlify deploy --dir=build --prod 
+
                 '''
             }
         }
