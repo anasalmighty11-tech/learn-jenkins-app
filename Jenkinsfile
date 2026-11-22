@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    envuronment {
+        NETLIFY_PROJECT_ID = '8c687882-c737-412d-8a96-57e708505580'
+    }
 
     stages {
         stage('Build') {
@@ -74,14 +77,15 @@ pipeline {
                 sh '''
                 npm install netlify-cli 
                 node_modules/.bin/serve --version
+                echo "Deploying to production. Project ID: ${NETLIFY_PROJECT_ID}"
                 '''
             }
         }
     }
 
     post {
-        always {
-            junit 'test-results/**/*.xml'
-        }
+    always {
+        junit allowEmptyResults: true, testResults: 'test-results/junit.xml'
     }
+}
 }
