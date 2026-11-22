@@ -2,17 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('w/o docker') {
-            steps {
-                sh '''
-                    echo "Without docker"
-                    ls -la
-                    touch container-no.txt
-                '''
-            }
-        }
-
-        stage('w/ docker') {
+        stage('Build') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -21,6 +11,7 @@ pipeline {
             }
             environment {
                 npm_config_cache = "${WORKSPACE}/.npm"
+            }
             steps {
                 sh '''
                     ls -la
@@ -28,10 +19,11 @@ pipeline {
                     npm --version
                     npm ci
                     npm run build
-                    ls -la                    
+                    ls -la
                 '''
             }
         }
+
         stage('Test') {
             agent {
                 docker {
@@ -39,13 +31,21 @@ pipeline {
                     reuseNode true
                 }
             }
+            environment {
+                npm_config_cache = "${WORKSPACE}/.npm"
+            }
             steps {
                 sh '''
                     test -f build/index.html
                     npm test
-                   
                 '''
             }
+        }
+    }
+
+    post {
+        always {
+            junit 'test-results/**/*.xml'
         }
     }
 }
